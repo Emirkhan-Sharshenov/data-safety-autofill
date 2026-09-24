@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+tools/.team
+
+# ВАЖНО: bob_sessions НЕ игнорировать — это обязательный деливерабл
+!bob_sessions/
+!bob_sessions/**
