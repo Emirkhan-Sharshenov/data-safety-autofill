@@ -1,15 +1,19 @@
 <#
 .SYNOPSIS
-  Сохраняет скриншот Bob task session summary из буфера обмена в bob_sessions/
-  с именем по формату хакатона.
+  Saves a Bob task session summary screenshot into bob_sessions/ using the
+  naming format required by the IBM Bob 2.0 hackathon.
+
+  NOTE: messages are ASCII-only on purpose. Windows PowerShell 5.1 reads .ps1
+  files as ANSI unless they carry a UTF-8 BOM, so non-ASCII text here would
+  break the parser depending on how the script is launched.
 
 .EXAMPLE
-  # 1. В Bob IDE: Tasks -> задача -> клик по заголовку -> Win+Shift+S (выделить панель)
+  # 1. Bob IDE: Tasks -> pick task -> click task header -> Win+Shift+S
   # 2.
-  powershell -File tools/new-session-shot.ps1 -Task 1 -Desc login_flow
+  powershell -File tools/new-session-shot.ps1 -Team myteam -Task 1 -Desc login_flow
 
 .EXAMPLE
-  # Взять последний файл из Pictures\Screenshots вместо буфера обмена
+  # Use the newest file in Pictures\Screenshots instead of the clipboard
   powershell -File tools/new-session-shot.ps1 -Task 2 -Desc repo_analysis -FromScreenshotsFolder
 #>
 [CmdletBinding()]
@@ -27,42 +31,45 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $outDir = Join-Path $repoRoot 'bob_sessions'
 if (-not (Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir | Out-Null }
 
-# Имя команды: параметр -> tools/.team -> запрос один раз
+# Team name: -Team parameter, else remembered value in tools\.team
 $teamFile = Join-Path $PSScriptRoot '.team'
 if (-not $Team) {
     if (Test-Path $teamFile) {
         $Team = (Get-Content $teamFile -Raw).Trim()
     } else {
-        throw "Укажи команду один раз: -Team <name>. Значение запомнится в tools\.team"
+        throw "Pass -Team <name> once; it is remembered in tools\.team"
     }
 } else {
     Set-Content -Path $teamFile -Value $Team -Encoding utf8 -NoNewline
 }
 
-# Нормализация: только [a-z0-9_]
+# Normalize to [a-z0-9_]
 $slug = ($Desc.ToLowerInvariant() -replace '[^a-z0-9]+', '_').Trim('_')
 $teamSlug = ($Team.ToLowerInvariant() -replace '[^a-z0-9]+', '')
+if (-not $slug) { throw "-Desc must contain at least one letter or digit" }
+if (-not $teamSlug) { throw "-Team must contain at least one letter or digit" }
+
 $name = '{0}_task{1:d2}_{2}_summary.png' -f $teamSlug, $Task, $slug
 $dest = Join-Path $outDir $name
 
 if (Test-Path $dest) {
     $stamp = Get-Date -Format 'HHmmss'
     $dest = Join-Path $outDir ($name -replace '\.png$', "_$stamp.png")
-    Write-Warning "Файл с таким именем уже есть, сохраняю как $(Split-Path $dest -Leaf)"
+    Write-Warning "Name already taken, saving as $(Split-Path $dest -Leaf)"
 }
 
 if ($FromScreenshotsFolder) {
     $shots = Join-Path ([Environment]::GetFolderPath('MyPictures')) 'Screenshots'
-    if (-not (Test-Path $shots)) { throw "Папка не найдена: $shots" }
+    if (-not (Test-Path $shots)) { throw "Folder not found: $shots" }
     $latest = Get-ChildItem $shots -Filter *.png |
               Sort-Object LastWriteTime -Descending |
               Select-Object -First 1
-    if (-not $latest) { throw "В $shots нет PNG-файлов" }
+    if (-not $latest) { throw "No PNG files in $shots" }
     Copy-Item $latest.FullName $dest
 } else {
     $img = [System.Windows.Forms.Clipboard]::GetImage()
     if (-not $img) {
-        throw "В буфере обмена нет картинки. Сначала сделай Win+Shift+S, потом запусти скрипт."
+        throw "No image in clipboard. Press Win+Shift+S first, then run this again."
     }
     $img.Save($dest, [System.Drawing.Imaging.ImageFormat]::Png)
     $img.Dispose()
@@ -72,4 +79,5 @@ $f = Get-Item $dest
 Write-Host ("OK  {0}  ({1:N0} KB)" -f $f.Name, ($f.Length / 1KB)) -ForegroundColor Green
 Write-Host ("    {0}" -f $f.FullName) -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "Всего скриншотов в bob_sessions: $((Get-ChildItem $outDir -Filter *.png).Count)"
+$count = (Get-ChildItem $outDir -Filter *.png).Count
+Write-Host "Screenshots in bob_sessions: $count"
