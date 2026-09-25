@@ -16,3 +16,9 @@ tools/.team
 # ВАЖНО: bob_sessions НЕ игнорировать — это обязательный деливерабл
 !bob_sessions/
 !bob_sessions/**
+
+# Never ship signing material
+*.jks
+*.keystore
+keystore.properties
+key.properties
