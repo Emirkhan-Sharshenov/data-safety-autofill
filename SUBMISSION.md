@@ -1,0 +1,169 @@
+# Тексты для сабмишена
+
+Всё, что видит судья — на английском. Места в `[СКОБКАХ]` заполняются
+в воскресенье реальными числами. **Не сдавай с незаполненными скобками.**
+
+---
+
+## Название
+
+Основной вариант: **Consent** — короткое, произносимое, не описывает
+механику, а называет суть.
+
+Запасные: `DataSafe`, `Declared`, `SafetyFill`.
+
+---
+
+## Short description
+
+> Fills Google Play's Data safety form from your Android code, with
+> file-and-line evidence behind every answer — including the data your
+> third-party SDKs collect without telling you.
+
+---
+
+## Problem & Solution Statement
+
+Лимит 500 слов. Черновик ниже — **[ЧИСЛО] слов**, место под результаты есть.
+
+### Problem
+
+Every Android app on Google Play must complete a Data safety form
+declaring what user data it collects, whether that data is shared, and
+why. The declaration is binding. Inaccurate answers get apps suspended.
+
+The form is hard for a reason that has nothing to do with effort. A
+developer knows their own code. They do not know what the libraries
+inside their app do. Analytics SDKs, crash reporters, ad networks and
+map libraries collect data on their own, and Google explicitly requires
+third-party collection to be declared as if it were the developer's own.
+
+I measured this on my own alarm-clock app before building anything.
+Answering the core collected-or-not question for 28 data types took 18
+minutes. Of the 11 types I marked as collected, 6 were guesses —
+confidence 1 or 2 out of 5.
+
+More than half of my affirmative answers were not knowledge. They were
+hope.
+
+Speed was never the problem. Certainty was.
+
+### Solution
+
+Consent answers the form from evidence instead of memory.
+
+Three analyzers run in parallel as IBM Bob subagents, each reading a
+different kind of proof:
+
+- **Manifest** — which permissions the app holds, and therefore what it
+  is capable of touching.
+- **Dependencies** — what each third-party SDK collects by default,
+  looked up against its own published privacy documentation.
+- **Code** — where data actually leaves the device: network calls,
+  analytics events, uploads.
+
+A reconciler merges them under one rule that mirrors Google's own
+definition: data counts as collected only when it leaves the device. Code
+evidence outranks dependency evidence, which outranks manifest evidence.
+A permission with no supporting egress resolves to "not collected", with
+the reasoning attached.
+
+Every answer carries its proof — file, line, snippet, and one sentence
+explaining the call. Nothing is asserted without a citation.
+
+The headline number is not speed. It is **how many data types were found
+only through third-party SDKs** — the answers a developer could not have
+reached by reading their own code.
+
+### Results
+
+[ЗАПОЛНИТЬ В ВОСКРЕСЕНЬЕ]
+
+- Data types the tool found that I had missed: [ЧИСЛО]
+- Guesses it resolved into evidenced answers: [ЧИСЛО] of my 6 low-confidence answers
+- Answers where it disagreed with me: [ЧИСЛО] — [ОДНА ФРАЗА О САМОМ ИНТЕРЕСНОМ РАСХОЖДЕНИИ]
+- Runtime: [СЕКУНДЫ] against 18 minutes by hand
+
+Tested on three of my own Android projects: an alarm clock, a
+peer-to-peer mesh messenger, and a Flutter application.
+
+---
+
+## IBM Bob Usage Statement
+
+⚠️ **Заполняется в воскресенье.** Врать здесь нельзя — это документ о
+том, что ты делал, и он проверяется против скриншотов в `bob_sessions/`.
+
+Каркас, по которому пройдёшься:
+
+```
+Bob built this project end to end. [СКОЛЬКО] tasks, all captured in
+bob_sessions/.
+
+Document understanding. I saved Google's Data safety documentation
+locally and had Bob turn it into a typed schema of the form — every data
+category, every question, every allowed answer, each carrying the URL it
+came from. [ЧТО ПОЛУЧИЛОСЬ, ЧТО ПРИШЛОСЬ ПРАВИТЬ РУКАМИ]
+
+Parallel subagents. The three analyzers were built as separate subagents
+working at the same time against a shared contract. [ЧТО ЗАМЕТИЛ,
+ЧЕМ ЭТО ОТЛИЧАЛОСЬ ОТ ОБЫЧНОГО ЧАТА]
+
+Agent mode. [ЧТО ПИСАЛ АГЕНТ, ГДЕ ТЫ ВМЕШИВАЛСЯ]
+
+What I had to correct. [ОБЯЗАТЕЛЬНО НАПИШИ. Судьи видели сотни заявок,
+где всё прошло идеально. Честный абзац про то, где Bob ошибся и как ты
+это поймал, добавляет доверия ко всему остальному]
+
+Budget. The whole project was built inside the 40 Bobcoin hackathon
+allocation. [СКОЛЬКО ПОТРАЧЕНО]
+```
+
+---
+
+## Сценарий видео — 3 минуты
+
+Жёсткие требования: MP4, максимум 3 минуты, минимум 90 секунд работы
+решения на экране, закадровый голос. Судья не смотрит дальше третьей минуты.
+
+| Время | Что на экране | Что говоришь |
+| --- | --- | --- |
+| 0:00–0:20 | Форма Data safety в Play Console, листаешь | Каждое приложение обязано её заполнить. Ошибёшься — снимут с публикации |
+| 0:20–0:45 | Твой `baseline.md`, крупно цифры | Я заполнил её для своего будильника за 18 минут. Из 11 утвердительных ответов 6 были догадками |
+| 0:45–2:30 | **Демо.** Выбираешь проект → форма заполняется → раскрываешь доказательство с файлом и строкой | Ведёшь по экрану. Обязательно покажи число «найдено только через зависимости» |
+| 2:30–2:50 | Схема архитектуры, три агента | Три субагента Bob работают параллельно, каждый читает свой источник |
+| 2:50–3:00 | Итоговые цифры | Что нашлось, чего я не знал |
+
+**Правила записи:**
+
+- Демо — не меньше 105 секунд, чтобы гарантированно перекрыть минимум в 90
+- Текст проговори вслух до записи, засеки время
+- Закрой почту, токены, статус-бар Bob с аккаунтом
+- Пиши голос отдельно на телефон, сводишь при монтаже
+
+---
+
+## Слайды — 7 штук
+
+1. Название, одна строка сути
+2. Проблема: форма Data safety и что бывает за ошибку
+3. **Твои цифры: 18 минут, 11 ответов, 6 догадок, 55%**
+4. Решение: схема с тремя агентами
+5. Скриншот интерфейса с раскрытым доказательством
+6. Результаты: что нашлось, чего ты не знал
+7. Как использовался Bob, сколько монет ушло
+
+Третий слайд — главный. Он единственный, где говорится о реальном
+измерении, а не о намерениях.
+
+---
+
+## Чеклист перед отправкой
+
+- [ ] Все `[СКОБКИ]` заполнены
+- [ ] Оба текста не длиннее 500 слов
+- [ ] Видео не длиннее 3:00, демо не короче 1:30
+- [ ] Обложка 16:9
+- [ ] Репозиторий публичный, `LICENSE` на месте
+- [ ] `bob_sessions/` со скриншотами каждой задачи
+- [ ] Ссылка на приложение открывается в режиме инкогнито
