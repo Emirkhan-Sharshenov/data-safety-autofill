@@ -58,21 +58,63 @@ if (Test-Path $dest) {
     Write-Warning "Name already taken, saving as $(Split-Path $dest -Leaf)"
 }
 
-if ($FromScreenshotsFolder) {
-    $shots = Join-Path ([Environment]::GetFolderPath('MyPictures')) 'Screenshots'
-    if (-not (Test-Path $shots)) { throw "Folder not found: $shots" }
-    $latest = Get-ChildItem $shots -Filter *.png |
-              Sort-Object LastWriteTime -Descending |
-              Select-Object -First 1
-    if (-not $latest) { throw "No PNG files in $shots" }
-    Copy-Item $latest.FullName $dest
-} else {
-    $img = [System.Windows.Forms.Clipboard]::GetImage()
-    if (-not $img) {
-        throw "No image in clipboard. Press Win+Shift+S first, then run this again."
+function Get-ClipboardImage {
+    # powershell -File may run outside STA, where Clipboard access silently
+    # returns nothing. Try the WinForms API on a dedicated STA thread, then
+    # fall back to the built-in cmdlet.
+    $result = $null
+    try {
+        $ps = [powershell]::Create()
+        $ps.Runspace = [runspacefactory]::CreateRunspace()
+        $ps.Runspace.ApartmentState = 'STA'
+        $ps.Runspace.Open()
+        $null = $ps.AddScript({
+            Add-Type -AssemblyName System.Windows.Forms
+            [System.Windows.Forms.Clipboard]::GetImage()
+        })
+        $result = $ps.Invoke() | Select-Object -First 1
+        $ps.Runspace.Close(); $ps.Dispose()
+    } catch { }
+    if ($result) { return $result }
+
+    try { $result = Get-Clipboard -Format Image -ErrorAction Stop } catch { }
+    return $result
+}
+
+function Get-LatestScreenshot {
+    $dirs = @(
+        (Join-Path ([Environment]::GetFolderPath('MyPictures')) 'Screenshots'),
+        (Join-Path ([Environment]::GetFolderPath('MyPictures')) 'Снимки экрана'),
+        [Environment]::GetFolderPath('Desktop')
+    )
+    $candidates = foreach ($d in $dirs) {
+        if (Test-Path $d) { Get-ChildItem $d -Filter *.png -ErrorAction SilentlyContinue }
     }
-    $img.Save($dest, [System.Drawing.Imaging.ImageFormat]::Png)
-    $img.Dispose()
+    $candidates | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
+
+$saved = $false
+
+if (-not $FromScreenshotsFolder) {
+    $img = Get-ClipboardImage
+    if ($img) {
+        $img.Save($dest, [System.Drawing.Imaging.ImageFormat]::Png)
+        $img.Dispose()
+        $saved = $true
+    }
+}
+
+if (-not $saved) {
+    $latest = Get-LatestScreenshot
+    if (-not $latest) {
+        throw "No image in clipboard and no recent PNG found. Use Win+PrtScn (saves straight to Pictures\Screenshots), then run this again."
+    }
+    $age = [int]((Get-Date) - $latest.LastWriteTime).TotalMinutes
+    if (-not $FromScreenshotsFolder -and $age -gt 10) {
+        throw "Clipboard empty, and the newest screenshot is $age minutes old. Take a fresh one, or pass -FromScreenshotsFolder to use it anyway."
+    }
+    Copy-Item $latest.FullName $dest
+    Write-Host ("  using file: {0} ({1} min old)" -f $latest.Name, $age) -ForegroundColor DarkGray
 }
 
 $f = Get-Item $dest
