@@ -8,6 +8,7 @@ export interface Finding {
   confidence: 'high' | 'medium' | 'low'
   reasoning: string
   evidence: { file: string; line: number; snippet: string }[]
+  needsReview?: boolean
 }
 
 export interface ManifestEntry {
