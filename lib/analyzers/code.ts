@@ -55,6 +55,16 @@ const EGRESS_RULES: PatternRule[] = [
     reasoning: 'Network call detected — data is transmitted to a remote endpoint.',
   },
   {
+    // Coordinate values interpolated into URL strings sent over the network.
+    // Matches patterns like: "...&lat=$lat&lon=$lon", "%.6f,%.6f;%.6f,%.6f" in URL format strings,
+    // and nominatim/osrm/overpass URL construction with lat/lon parameters.
+    kind: 'EGRESS',
+    regex: /[&?/](?:lat|lon|latitude|longitude)[=$/,]|\bLat\b.*\bLon\b.*https?:|https?:.*\blat\b.*\blon\b|\$lat|\$lon|lat=.*lon=|lng=|%.+f.*%.+f.*(?:route|driving|reverse|overpass)|nominatim|overpass-api/i,
+    dataType: 'preciseLocation',
+    confidence: 'high',
+    reasoning: 'Location coordinates (lat/lon) are embedded in a URL and transmitted to a remote endpoint.',
+  },
+  {
     kind: 'EGRESS',
     regex: /retrofit.*interface|@GET|@POST|@PUT|@DELETE|@PATCH/i,
     dataType: 'otherActions',

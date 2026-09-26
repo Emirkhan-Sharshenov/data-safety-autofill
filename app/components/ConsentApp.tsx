@@ -346,6 +346,7 @@ function ResultsPanel({
 interface ManualInput {
   manifest: string
   gradle: string
+  source: string
 }
 
 function InputPanel({
@@ -361,6 +362,7 @@ function InputPanel({
   const [selectedFixture, setSelectedFixture] = useState(defaultFixture)
   const [manifest, setManifest] = useState('')
   const [gradle, setGradle] = useState('')
+  const [source, setSource] = useState('')
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -368,10 +370,10 @@ function InputPanel({
       if (mode === 'fixture') {
         onRun(fixtures[selectedFixture] ?? null, null)
       } else {
-        onRun(null, { manifest, gradle })
+        onRun(null, { manifest, gradle, source })
       }
     },
-    [mode, selectedFixture, manifest, gradle, fixtures, onRun]
+    [mode, selectedFixture, manifest, gradle, source, fixtures, onRun]
   )
 
   return (
@@ -416,28 +418,42 @@ function InputPanel({
           </select>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-              AndroidManifest.xml
-            </label>
-            <textarea
-              value={manifest}
-              onChange={(e) => setManifest(e.target.value)}
-              placeholder='<?xml version="1.0"...'
-              rows={12}
-              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
-            />
+        <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
+                AndroidManifest.xml
+              </label>
+              <textarea
+                value={manifest}
+                onChange={(e) => setManifest(e.target.value)}
+                placeholder='<?xml version="1.0"...'
+                rows={10}
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
+                build.gradle / build.gradle.kts
+              </label>
+              <textarea
+                value={gradle}
+                onChange={(e) => setGradle(e.target.value)}
+                placeholder="dependencies { ... }"
+                rows={10}
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-              build.gradle / build.gradle.kts
+              Source code <span className="text-slate-400 dark:text-slate-500 font-normal">(optional — paste one or more .kt / .java files)</span>
             </label>
             <textarea
-              value={gradle}
-              onChange={(e) => setGradle(e.target.value)}
-              placeholder="dependencies { ... }"
-              rows={12}
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              placeholder="// paste Kotlin or Java source here..."
+              rows={10}
               className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             />
           </div>
@@ -531,10 +547,12 @@ function runAnalysis(
 ): ReconcilerOutput {
   let manifests: { filePath: string; content: string }[] = []
   let gradleFiles: { filePath: string; content: string }[] = []
+  let sourceFiles: { filePath: string; content: string }[] = []
 
   if (fixture) {
     manifests = fixture.manifests
     gradleFiles = fixture.gradleFiles
+    sourceFiles = fixture.sourceFiles
   } else if (manual) {
     if (manual.manifest.trim()) {
       manifests = [{ filePath: 'AndroidManifest.xml', content: manual.manifest }]
@@ -542,11 +560,14 @@ function runAnalysis(
     if (manual.gradle.trim()) {
       gradleFiles = [{ filePath: 'build.gradle', content: manual.gradle }]
     }
+    if (manual.source.trim()) {
+      sourceFiles = [{ filePath: 'pasted.kt', content: manual.source }]
+    }
   }
 
   const manifestFindings = analyzeManifest({ manifests })
   const dependencyFindings = analyzeDependencies({ gradleFiles })
-  const codeFindings = analyzeCode({ sourceFiles: [] })
+  const codeFindings = analyzeCode({ sourceFiles })
 
   return reconcile({ manifestFindings, dependencyFindings, codeFindings })
 }
