@@ -1,4 +1,5 @@
 node_modules/
+.next/
 dist/
 build/
 .venv/
@@ -23,3 +24,8 @@ tools/.team
 keystore.properties
 key.properties
 tools/.timer-*
+
+
+# Сохранённые страницы: в репозитории только извлечённый текст
+policies/*.html
+policies/*_files/
