@@ -149,7 +149,7 @@ required an answer.
 
 Then I built Consent, and ran it on the same app.
 
-Ten of my eleven answers were wrong.
+Nine of those eleven were wrong.
 
 Not because I was careless. Because I kept confusing permission with
 collection. The app has a coarse location permission, so I declared coarse
