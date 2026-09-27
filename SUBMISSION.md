@@ -132,7 +132,76 @@ allocation. [СКОЛЬКО ПОТРАЧЕНО]
 
 ---
 
-## Текст для озвучки — читать вслух
+## Озвучка по фрагментам — для записи в CapCut
+
+Ставь курсор в начало фрагмента, жми Voiceover, читаешь под свою же
+картинку. Темп ~2 слова в секунду.
+
+### Фрагмент A — документация Google · 20 слов ≈ 10 сек
+
+> Every Android app on Google Play has to fill in a Data safety form.
+> Get it wrong, and your app can be taken down.
+
+### Фрагмент B — baseline.md · 42 слова ≈ 20 сек
+
+> Before I built anything, I filled that form by hand for my own alarm
+> clock. It took eighteen minutes. I marked eleven data types as
+> collected. Six of those were guesses — I had no idea, but the form
+> still required an answer.
+
+### Фрагмент C — comparison.md, таблица · 24 слова ≈ 12 сек
+
+> Then I built Consent, and ran it on the same app.
+>
+> *(пауза одну секунду)*
+>
+> Nine of those eleven were wrong. Not because I was careless — because
+> I kept confusing permission with collection.
+
+### Фрагмент D — демо · 150 слов ≈ 75 сек на 90 сек картинки
+
+Запас в пятнадцать секунд намеренный: паузы между предложениями нужны,
+иначе речь под демо звучит тараторкой.
+
+> Here is the form filled from my mesh messenger. Two data types
+> collected. Both found only through a third-party SDK — Google Play
+> Services Nearby. Nothing in my own code touches device identifiers.
+>
+> Every answer carries its proof. File, line, and the actual snippet —
+> line thirty-six of build dot gradle.
+>
+> And it says nothing where it found nothing. Thirty-six types, no
+> evidence, no declaration.
+>
+> Same tool, my alarm clock. Precise location — confirmed. Coordinates
+> go to a geocoding service. Yesterday I guessed this with three out of
+> five confidence. Now there is a line number.
+>
+> Where it cannot prove transmission, it says so instead of guessing.
+>
+> The whole form exports with every citation intact. All of it built
+> with Bob — three analyzers running as parallel subagents.
+
+### Фрагмент E — раздел 3f и диаграмма · 55 слов ≈ 27 сек
+
+> The tool is not perfect. It reported my alarm clock collects photos,
+> because the app uses the camera API as a flashlight. I caught that by
+> running it against real code.
+>
+> Eighteen minutes became forty-three milliseconds. But speed was never
+> the problem. Certainty was.
+
+**Если не влезает** — режь в этом порядке: в E фразу про фонарик до
+«It reported my alarm clock collects photos — the camera API is used as
+a flashlight», в B предложение про восемнадцать минут (цифра всё равно
+прозвучит в E), в D абзац про экспорт.
+
+**Не режь:** «Nine of those eleven were wrong», «found only through a
+third-party SDK», «The tool is not perfect».
+
+---
+
+## Текст для озвучки — читать вслух (единым куском)
 
 Примерно 400 слов, ~2:40 при спокойном темпе. Репетируй с секундомером.
 Если не укладываешься — режь третий абзац, не демо.
