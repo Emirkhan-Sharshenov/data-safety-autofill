@@ -1,5 +1,39 @@
 # IBM Bob 2.0 Hackathon — 25–27 сентября 2026
 
+## Consent — Pipeline Architecture
+
+```mermaid
+flowchart LR
+    AP["Android Project\n(manifest · gradle · Kotlin)"]
+    GD["Google Data Safety\nDocumentation"]
+    SCH["lib/schema\nTyped data-type keys"]
+    MA["Manifest Analyzer\nreads: AndroidManifest.xml\nproduces: permission evidence"]
+    DA["Dependency Analyzer\nreads: build.gradle\nproduces: SDK evidence"]
+    CA["Code Analyzer\nreads: Kotlin sources\nproduces: egress evidence ★high"]
+    REC["Reconciler\ncode › dependency › manifest"]
+    FF["Filled Form\n+ file:line evidence"]
+    MD["Markdown Export"]
+
+    GD --> SCH
+    AP --> MA & DA & CA
+    SCH --> MA & DA & CA
+    MA & DA & CA --> REC
+    REC --> FF
+    REC --> MD
+```
+
+Each finding carries at least one file-and-line evidence entry so every
+form answer is traceable to source code or configuration.  When the same
+data type is detected by multiple analyzers the reconciler applies the
+priority rule **code › dependency › manifest**: real egress in Kotlin
+source outweighs an SDK lookup in `build.gradle`, which outweighs a
+declared permission in the manifest; a manifest-only signal with no
+code or dependency support resolves to `collected: false`.
+
+> Full architecture notes: [docs/architecture.md](docs/architecture.md)
+
+---
+
 Тема: **Build with purpose using IBM Bob 2.0** — улучшить конкретный
 workflow разработчика (онбординг, дебаг, код-ревью, тестирование,
 поддержка, релиз/деплой).
