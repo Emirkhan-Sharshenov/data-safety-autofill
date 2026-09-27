@@ -30,3 +30,5 @@ tools/.timer-*
 policies/*.html
 policies/*_files/
 .vercel
+
+notes/
