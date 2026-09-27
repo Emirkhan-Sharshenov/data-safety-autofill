@@ -73,39 +73,101 @@ different kind of proof:
 - **Code** — where data actually leaves the device: network calls,
   analytics events, uploads.
 
-A reconciler merges them under one rule that mirrors Google's own
-definition: data counts as collected only when it leaves the device. Code
-evidence outranks dependency evidence, which outranks manifest evidence.
-A permission with no supporting egress resolves to "not collected", with
-the reasoning attached.
+A reconciler merges them under Google's own definition: data counts as
+collected only when it leaves the device. Code evidence outranks
+dependency evidence, which outranks manifest evidence. A permission with
+no supporting egress resolves to "not collected".
 
 Every answer carries its proof — file, line, snippet, and one sentence
 explaining the call. Nothing is asserted without a citation.
 
-The headline number is not speed. It is **how many data types were found
-only through third-party SDKs** — the answers a developer could not have
-reached by reading their own code.
-
 ### Results
 
-[ЗАПОЛНИТЬ В ВОСКРЕСЕНЬЕ]
+Of the eleven types I had marked as collected, **nine were false
+positives**. The tool resolved all six of my guesses — and in every case
+the correct answer was "not collected". It also overturned three answers
+I had given confidently. Each was the same mistake: I reasoned from a
+permission or a feature, never from evidence that data left the device.
 
-- Data types the tool found that I had missed: [ЧИСЛО]
-- Guesses it resolved into evidenced answers: [ЧИСЛО] of my 6 low-confidence answers
-- Answers where it disagreed with me: [ЧИСЛО] — [ОДНА ФРАЗА О САМОМ ИНТЕРЕСНОМ РАСХОЖДЕНИИ]
-- Runtime: [СЕКУНДЫ] against 18 minutes by hand
+Precision on this app: **9% by hand, 67% for the tool.** Runtime: 27 ms
+against 17 minutes 57 seconds.
 
-Tested on three of my own Android projects: an alarm clock, a
-peer-to-peer mesh messenger, and a Flutter application.
+On my second app, a peer-to-peer messenger, the dependency analyzer found
+two data types — Device or other IDs, and Other actions — that appear
+nowhere in the app's own source. Both come from `play-services-nearby`.
+This is the case Google's policy explicitly covers and the one a developer
+cannot reach by reading their own code.
+
+The tool is wrong once, and the repository says so. It reads a
+`TelephonyManager` call used to fetch a country code as a device
+identifier. There my manual answer was right. That case is documented
+rather than quietly fixed, because a tool that only reports its wins is
+not one you should trust with a binding legal declaration.
 
 ---
 
-## IBM Bob Usage Statement
+## IBM Bob Usage Statement — черновик
 
-⚠️ **Заполняется в воскресенье.** Врать здесь нельзя — это документ о
-том, что ты делал, и он проверяется против скриншотов в `bob_sessions/`.
+⚠️ **Прочитай целиком и поправь всё, за что не готов отвечать на
+вопросах.** Это документ о твоей работе, и он сверяется со скриншотами
+в `bob_sessions/`.
 
-Каркас, по которому пройдёшься:
+**Что проверить обязательно:** цифру расхода Bobcoins в предпоследнем
+абзаце и последний абзац про другие инструменты — он защищает тебя, но
+формулировка должна быть твоей.
+
+```
+Bob built this project. I directed it, checked its output against the
+repository, and fixed what it got wrong.
+
+/init came first. Bob read the repo and produced AGENTS.md capturing the
+architecture rules I had written down — evidence priority, confidence
+caps, the two-module fixture. Every later task started with that context
+instead of rediscovering it, which is most of why the budget held.
+
+Document understanding built the foundation. I saved Google's Data safety
+documentation locally and had Bob turn it into a typed schema: every data
+category and type with Google's exact labels, the allowed answers, the
+seven collection purposes, each carrying the URL it came from. Where the
+two source documents disagreed, Bob flagged the conflict instead of
+choosing. That schema became the single contract all three analyzers
+share. It cost 0.83 Bobcoins.
+
+Three analyzers were then built as parallel subagents against a shared
+Finding contract, each reading a different kind of proof: the manifest for
+permissions, the gradle files for third-party SDKs, the Kotlin source for
+places where data actually leaves the device. Isolated contexts meant they
+could not drift into each other's rules.
+
+What running it on real code caught is the part worth reporting. The first
+code analyzer declared that my alarm clock collects photos. Every piece of
+evidence it offered pointed at CameraManager.setTorchMode — the app uses
+the camera API as a flashlight. It was also asserting collection from API
+reads while its own reasoning strings hedged with "may be transmitted".
+That contradicted the rule we had just encoded in the schema: Google
+counts data as collected only when it leaves the device. I had Bob split
+read patterns from egress patterns, narrow the camera rule to capture
+APIs, and reserve high confidence for proven egress. The false positive
+disappeared. Its unit tests had passed throughout.
+
+The same habit caught two invented details in the README Bob drafted —
+data-type names that do not exist in the schema, and a fix it claimed to
+have made but had not. Both were corrected before submission. Checking
+generated text against the repository, rather than trusting the summary,
+is the single practice I would carry to the next project.
+
+Total spend: [ЦИФРА] of 40 Bobcoins, solo, across [ЧИСЛО] tasks. Session
+summaries are in bob_sessions/.
+
+Planning, rule research and the written submission materials were done
+with a separate assistant; the commit history attributes it. The product
+itself — schema, analyzers, reconciler, interface, evaluation — was built
+with Bob.
+```
+
+---
+
+## Старый каркас (для справки)
 
 ```
 Bob built this project end to end. [СКОЛЬКО] tasks, all captured in
