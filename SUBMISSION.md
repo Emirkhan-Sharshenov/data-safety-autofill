@@ -191,6 +191,45 @@ problem. Certainty was.
 
 ---
 
+## Хореография демо — 105 секунд
+
+Требование: **минимум 90 секунд работы решения на экране**. Блок озвучки
+выше даёт только 45, поэтому показываем больше и говорим медленнее.
+
+Репетируй с секундомером по шагам. Курсор ведёшь плавно — рывки на записи
+выглядят нервно.
+
+| № | Время | Что делаешь на экране | Что говоришь |
+| --- | --- | --- | --- |
+| 1 | 0:00–0:08 | Страница уже открыта на `mesh-network`. Просто держишь кадр | «Here is the form filled from my mesh messenger.» |
+| 2 | 0:08–0:20 | Наводишь курсор на три числа в сводке, задерживаешься на фиолетовом | «Two data types collected. Both found only through a third-party SDK.» |
+| 3 | 0:20–0:32 | Прокрутка к разделу Collected, курсор на `Device or other IDs` | «Google Play Services Nearby. Nothing in my own code touches device identifiers.» |
+| 4 | 0:32–0:45 | Клик по `▸ 1 evidence item`, раскрывается доказательство | «Every answer carries its proof. File, line, and the actual snippet — line thirty-six of build dot gradle.» |
+| 5 | 0:45–0:55 | Клик по свёрнутому блоку `36 data types with no evidence found` | «And it says nothing where it found nothing. Thirty-six types, no evidence, no declaration.» |
+| 6 | 0:55–1:05 | Переключаешь выпадающий список на `ne-prospi`, жмёшь **Analyze** | «Same tool, my alarm clock.» |
+| 7 | 1:05–1:20 | Курсор на `Precise location`, раскрываешь доказательство с `Net.kt` | «Precise location — confirmed. Coordinates go to a geocoding service. Yesterday I guessed this with three out of five confidence. Now there is a line number.» |
+| 8 | 1:20–1:30 | Курсор на `needs review`, раскрываешь один из них | «Where it cannot prove transmission, it says so instead of guessing.» |
+| 9 | 1:30–1:40 | Клик **Export Markdown**, показываешь скачанный файл | «The whole form exports with every citation intact.» |
+| 10 | 1:40–1:45 | Переключаешься в Bob IDE, панель **Tasks** со списком задач | «All of it built with Bob.» |
+
+После десятого шага — обратно на себя или на схему архитектуры, и
+последние два абзаца озвучки.
+
+### Что обязательно должно попасть в кадр
+
+- Фиолетовое число «found only via third-party SDK» — суть продукта
+- Раскрытое доказательство с именем файла и номером строки
+- Панель Tasks в Bob IDE — доказательство использования Bob
+
+### Технические настройки записи
+
+- Разрешение 1920×1080, 30 кадров хватит
+- Масштаб страницы **125%** — на маленьком экране судьи мелкий текст нечитаем
+- Тёмная тема — она уже стоит, на ней фиолетовое число заметнее
+- Курсор крупный, если OBS умеет подсвечивать клики — включи
+
+---
+
 ## Сценарий видео — 3 минуты
 
 Жёсткие требования: MP4, максимум 3 минуты, минимум 90 секунд работы
