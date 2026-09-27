@@ -132,6 +132,65 @@ allocation. [СКОЛЬКО ПОТРАЧЕНО]
 
 ---
 
+## Текст для озвучки — читать вслух
+
+Примерно 400 слов, ~2:40 при спокойном темпе. Репетируй с секундомером.
+Если не укладываешься — режь третий абзац, не демо.
+
+```
+Every Android app on Google Play has to fill in a Data safety form. You
+declare what data your app collects, whether you share it, and why. Get it
+wrong and your app can be taken down.
+
+Before I built anything, I filled that form by hand for my own alarm clock
+app. It took eighteen minutes. I marked eleven data types as collected.
+Six of those eleven were guesses — I had no idea, but the form still
+required an answer.
+
+Then I built Consent, and ran it on the same app.
+
+Ten of my eleven answers were wrong.
+
+Not because I was careless. Because I kept confusing permission with
+collection. The app has a coarse location permission, so I declared coarse
+location. It plays an alarm sound, so I declared music files. It can post
+notifications, so I declared messages. None of that is collection. Google
+counts data as collected only when it leaves the device.
+
+That distinction is what the tool is built around.
+
+[ДЕМО — говоришь поверх экрана]
+
+Here is the form filled from my mesh messenger. Two data types collected.
+Both of them found only through a third-party SDK — Google Play Services
+Nearby. Nothing in my own code touches device identifiers. I could have
+read every line I wrote and never found these.
+
+Every answer carries its proof. File, line, and the actual snippet. This
+one points at line thirty-six of build dot gradle.
+
+Three analyzers produce this, running as parallel Bob subagents. One reads
+the manifest, one reads dependencies, one reads source code for places
+where data actually leaves the device. A reconciler merges them: code
+evidence outranks dependencies, dependencies outrank the manifest.
+
+[КОНЕЦ ДЕМО]
+
+The tool is not perfect. It reported my alarm clock collects photos,
+because the app uses the camera API as a flashlight. I caught that by
+running it against real code and reading the evidence. It also flags a
+country-code lookup as a device identifier — there, my manual answer was
+right and the tool is wrong. Both are documented in the repository.
+
+Eighteen minutes became forty-three milliseconds. But speed was never the
+problem. Certainty was.
+```
+
+**Где какие цифры** — если собьёшься, все они в `eval/comparison.md`:
+18 минут, 11 отмечено, 6 догадок, 10 ошибок, 2 типа только через SDK, 43 мс.
+
+---
+
 ## Сценарий видео — 3 минуты
 
 Жёсткие требования: MP4, максимум 3 минуты, минимум 90 секунд работы
