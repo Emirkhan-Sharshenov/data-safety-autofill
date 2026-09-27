@@ -1,103 +1,103 @@
-# Baseline — ручное заполнение Data Safety
+# Baseline — filling the Data safety form by hand
 
-Приложение: `ne-prospi`. Замерено **до** написания инструмента,
-25 сентября 2026, вечер пятницы.
+App: `ne-prospi`, an alarm clock. Measured **before** the tool existed,
+on the evening of Friday 25 September 2026.
 
-## Результат
+## Result
 
-| Метрика | Значение |
+| Metric | Value |
 | --- | --- |
-| **Время** | 17 мин 57 сек |
-| Строк пройдено | 31 из 31 |
-| Типов данных отмечено как собираемые | **11** из 28 |
-| Из них с уверенностью 1–2 | **6** |
-| Доля догадок среди «собирается» | **55%** |
+| **Time** | 17 min 57 sec |
+| Rows completed | 31 of 31 |
+| Data types marked as collected | **11** of 28 |
+| Of those, at confidence 1–2 | **6** |
+| Share of guesses among "collected" answers | **55%** |
 
-Больше половины утвердительных ответов — догадки. Это и есть проблема,
-которую решает инструмент: не скорость, а то, что человек не знает
-ответа и всё равно обязан его дать.
+More than half of the affirmative answers were guesses. That is the
+problem this tool addresses: not speed, but having to commit to an answer
+you do not know while the form still requires one.
 
-### Оговорка к метрике времени
+### Caveat on the timing figure
 
-Шаблон был упрощён: спрашивалось только «собирается или нет». Настоящая
-форма в Play Console задаёт по каждому собираемому типу продолжение —
-цель сбора (до семи вариантов), обязателен он или опционален, передаётся
-ли третьим лицам, обрабатывается ли эфемерно.
+The template was simplified — it asked only "collected or not". The real
+Play Console form asks follow-up questions for every collected type: the
+purpose of collection (up to seven options), whether collection is
+required or optional, whether the data is shared with third parties, and
+whether processing is ephemeral.
 
-Поэтому 18 минут — **нижняя граница** для базового решения, а не время
-заполнения полной формы. В сабмишене заявляем именно так.
+So 18 minutes is a **floor** for the base decision, not the time to fill
+the complete form. The submission states it that way.
 
-## Ответы
+## Answers
 
-`нет` — не собирается, ответ уверенный.
-Цифра — **собирается**, значение равно уверенности по шкале 1–5.
+`no` — judged not collected, answered with confidence.
+A number — judged **collected**, the value is confidence on a 1–5 scale.
 
-| # | Тип данных | Записано |
+| # | Data type | Recorded |
 | --- | --- | --- |
-| 1 | Приблизительная геолокация | 5 |
-| 2 | Точная геолокация | 3 |
-| 3 | Имя | нет |
-| 4 | Email | нет |
-| 5 | Идентификаторы пользователя | нет |
-| 6 | Телефон | нет |
-| 7 | Платёжная информация | нет |
-| 8 | История покупок | нет |
-| 9 | Здоровье | нет |
-| 10 | Фитнес | нет |
-| 11 | Сообщения в приложении | 4 |
-| 12 | Фото | нет |
-| 13 | Видео | нет |
-| 14 | Записи голоса или звука | нет |
-| 15 | Музыкальные файлы | 3 |
-| 16 | Другие аудиофайлы | нет |
-| 17 | Файлы и документы | 2 |
-| 18 | События календаря | 1 |
-| 19 | Контакты | нет |
-| 20 | Взаимодействия с приложением | 1 |
-| 21 | История поиска в приложении | 2 |
-| 22 | Установленные приложения | 2 |
-| 23 | Другой пользовательский контент | нет |
-| 24 | История веб-браузинга | нет |
-| 25 | Логи сбоев | нет |
-| 26 | Диагностика | 2 |
-| 27 | Другие данные о работе приложения | 3 |
-| 28 | Идентификаторы устройства | нет |
+| 1 | Approximate location | 5 |
+| 2 | Precise location | 3 |
+| 3 | Name | no |
+| 4 | Email address | no |
+| 5 | User IDs | no |
+| 6 | Phone number | no |
+| 7 | User payment info | no |
+| 8 | Purchase history | no |
+| 9 | Health info | no |
+| 10 | Fitness info | no |
+| 11 | Other in-app messages | 4 |
+| 12 | Photos | no |
+| 13 | Videos | no |
+| 14 | Voice or sound recordings | no |
+| 15 | Music files | 3 |
+| 16 | Other audio files | no |
+| 17 | Files and docs | 2 |
+| 18 | Calendar events | 1 |
+| 19 | Contacts | no |
+| 20 | App interactions | 1 |
+| 21 | In-app search history | 2 |
+| 22 | Installed apps | 2 |
+| 23 | Other user-generated content | no |
+| 24 | Web browsing history | no |
+| 25 | Crash logs | no |
+| 26 | Diagnostics | 2 |
+| 27 | Other app performance data | 3 |
+| 28 | Device or other IDs | no |
 
-### Общие вопросы
+### App-level questions
 
-| # | Вопрос | Записано |
+| # | Question | Recorded |
 | --- | --- | --- |
-| 29 | Данные шифруются при передаче | нет |
-| 30 | Пользователь может запросить удаление | нет |
-| 31 | Практики прошли независимую проверку | 2 |
+| 29 | Data is encrypted in transit | no |
+| 30 | Users can request deletion | no |
+| 31 | Practices independently reviewed | 2 |
 
-## Отмечено как собираемое — 11 типов
+## Marked as collected — 11 types
 
-| Уверенность | Типы |
+| Confidence | Types |
 | --- | --- |
-| 5 | Приблизительная геолокация |
-| 4 | Сообщения в приложении |
-| 3 | Точная геолокация, музыкальные файлы, другие данные о работе |
-| **2** | **Файлы и документы, история поиска, установленные приложения, диагностика** |
-| **1** | **События календаря, взаимодействия с приложением** |
+| 5 | Approximate location |
+| 4 | Other in-app messages |
+| 3 | Precise location, music files, other app performance data |
+| **2** | **Files and docs, in-app search history, installed apps, diagnostics** |
+| **1** | **Calendar events, app interactions** |
 
-Шесть выделенных — главный материал для демонстрации. По каждому
-человек был обязан дать ответ в форме, не зная его.
+The six highlighted rows are the core of the demonstration. For each of
+them the form demanded an answer that the developer did not have.
 
-## Проверить инструментом в первую очередь
+## To check against the tool first
 
-Ответы, которые выглядят подозрительно и которые стоит перепроверить
-отдельно — расхождение здесь будет самым интересным результатом:
+Answers that looked suspect at the time and were worth re-examining — a
+disagreement here would be the most interesting result:
 
-- 22 «Установленные приложения» — для будильника без аналитики неочевидно
-- 18 «События календаря» — уверенность 1, разрешения на календарь в
-  манифесте нет
-- 25 «Логи сбоев» отмечены как **не** собираемые с высокой уверенностью,
-  хотя в коде есть сетевые вызовы
+- 22, installed apps — not obvious for an alarm clock with no analytics
+- 18, calendar events — confidence 1, and the manifest holds no calendar
+  permission
+- 25, crash logs — marked confidently as **not** collected, even though
+  the source makes network calls
 
-## Что пропустил
+## What was missed
 
-Заполняется после прогона инструмента: что он нашёл, а человек нет.
-Разница между списками — доказательство ценности.
-
--
+See [`comparison.md`](comparison.md) for what the tool found that this
+manual pass did not. The gap between the two lists is the evidence of
+value.

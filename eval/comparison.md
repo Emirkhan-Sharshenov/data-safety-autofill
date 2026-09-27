@@ -3,7 +3,7 @@
 **Scope:** ne-prospi only. mesh-network was never measured by hand and does not appear here.
 
 **Baseline notation recap:**
-- `нет` = manually judged not collected, confident answer.
+- `no` = manually judged not collected, answered with confidence.
 - Number (1–5) = manually judged collected; the number is confidence on a 1–5 scale
   (1 = pure guess, 5 = certain).
 
@@ -128,7 +128,7 @@ by the diagnostics rule as local-only) but nothing that transmits performance da
 **Verdict: The tool is correct.** I had no concrete evidence — this was a guess
 based on "it must log something". The tool correctly finds nothing.
 
-### 3f. Device or other IDs (my answer: нет — not collected)
+### 3f. Device or other IDs (my answer: no — not collected)
 
 **My answer:** confident not collected.
 **Tool answer:** not collected (code evidence, `needsReview: true`).
