@@ -156,8 +156,9 @@ have made but had not. Both were corrected before submission. Checking
 generated text against the repository, rather than trusting the summary,
 is the single practice I would carry to the next project.
 
-Total spend: [ЦИФРА] of 40 Bobcoins, solo, across [ЧИСЛО] tasks. Session
-summaries are in bob_sessions/.
+Total spend: 18.24 of 40 Bobcoins, solo, across 8 tasks. The most
+expensive was the interface at 6.19; the schema that everything else
+depends on cost 0.83. Session summaries are in bob_sessions/.
 
 Planning, rule research and the written submission materials were done
 with a separate assistant; the commit history attributes it. The product
